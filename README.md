@@ -78,10 +78,10 @@ The same query files are used for the PIM, CPU, and GPU implementations.
 
 The datasets and query files are **not included directly in this GitHub repository because of their size**.
 
-They can be downloaded from Google Drive:
+They can be downloaded from OneDrive:
 
 **Data and Query Files:**
-[Google Drive link will be added here]
+[[One Drivelink]](https://mailmissouri-my.sharepoint.com/:f:/r/personal/tjv7w_umsystem_edu/Documents/TPDS_DataQuery?d=w9a8477e0167c4c518703d030335958be&csf=1&web=1&e=KJdoEY)
 
 After downloading, organize the files as:
 
