@@ -1,0 +1,171 @@
+#include <defs.h>
+#include <mram.h>
+#include <perfcounter.h>
+#include <barrier.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "common.h"
+
+STDOUT_BUFFER_INIT(131072); // 128 KB
+
+#define MAX_QUERY (100000)
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+// Process in small batches — no risk of overflow
+ #define LEAF_BATCH 256. // WRAM per tasklet (~48 KB safe budget).
+
+// Structure to define a rectangle
+typedef struct Rect
+{
+    int xmin, ymin;
+    int xmax, ymax;
+} Rect;
+
+// Structure for MBR
+typedef struct MBR
+{
+    int xmin, ymin;
+    int xmax, ymax;
+} MBR;
+
+// Serialized R-tree node
+typedef struct SerializedNode
+{
+    int isLeaf;
+    int count;
+    MBR mbr;
+    int children[MAX_CHILDREN];
+    Rect rects[MAX_RECTS];
+} SerializedNode;
+
+// MRAM Variables
+__mram_noinit uint64_t DPU_INDEX;
+__host uint64_t QUERY_NUM;
+__mram_noinit Rect DPU_QUERY_RECT[MAX_QUERY];
+__mram_noinit SerializedNode DPU_TREE[MAX_NODES];
+//__mram_noinit OverlapResult DPU_RESULT[MAX_QUERY];
+__mram_noinit uint64_t DPU_OVERLAP_COUNT;
+
+// New WRAM buffer to write compact results
+//__dma_aligned OverlapResult compact_results[MAX_QUERY]; // This will store only "found == 1" results
+
+// WRAM Variables
+__dma_aligned uint32_t local_found_count_array[NR_TASKLETS];
+
+__dma_aligned Rect batch[LEAF_BATCH];
+
+BARRIER_INIT(my_barrier, NR_TASKLETS);
+
+// Rectangle overlap check
+bool isRectOverlap(Rect r1, Rect r2)
+{
+    return !(r1.xmax < r2.xmin || r1.xmin > r2.xmax ||
+             r1.ymax < r2.ymin || r1.ymin > r2.ymax);
+}
+
+// Recursive R-tree search
+bool search_rtree_dpu(int node_index, Rect query_rect, int start_child, int end_child, int index)
+{
+    Rect node_mbr = {
+        DPU_TREE[node_index].mbr.xmin, DPU_TREE[node_index].mbr.ymin,
+        DPU_TREE[node_index].mbr.xmax, DPU_TREE[node_index].mbr.ymax};
+
+    if (!isRectOverlap(node_mbr, query_rect))
+        return false;
+
+    //    if (DPU_TREE[node_index].isLeaf)
+    //    {
+    //        bool found = false;
+    //        for (int i = 0; i < DPU_TREE[node_index].count; i++)
+    //        {
+    //            Rect leaf_rect = DPU_TREE[node_index].rects[i];
+    //            if (isRectOverlap(leaf_rect, query_rect))
+    //            {
+    //                found = true;
+    //            }
+    //        }
+    //        return found;
+    //    }
+
+    // This will work even if DPU_TREE[node_index].count be less then 4
+    if (DPU_TREE[node_index].isLeaf)
+    {
+        for (int i = me(); i < DPU_TREE[node_index].count; i += NR_TASKLETS * 4)
+        {
+            if (i < DPU_TREE[node_index].count && isRectOverlap(DPU_TREE[node_index].rects[i], query_rect))
+                return true;
+            if (i + 1 < DPU_TREE[node_index].count && isRectOverlap(DPU_TREE[node_index].rects[i + 1], query_rect))
+                return true;
+            if (i + 2 < DPU_TREE[node_index].count && isRectOverlap(DPU_TREE[node_index].rects[i + 2], query_rect))
+                return true;
+            if (i + 3 < DPU_TREE[node_index].count && isRectOverlap(DPU_TREE[node_index].rects[i + 3], query_rect))
+                return true;
+        }
+
+        return false; // Only return false if none of the rects match
+    }
+
+    else
+    {
+        for (int i = start_child; i < end_child && i < DPU_TREE[node_index].count; i++)
+        {
+            int child_index = DPU_TREE[node_index].children[i];
+            int child_count = DPU_TREE[child_index].count;
+            if (search_rtree_dpu(child_index, query_rect, 0, child_count, index))
+                return true;
+        }
+        return false;
+    }
+}
+
+int main()
+{
+    uint32_t tasklet_id = me();
+
+    // Determine query range for this tasklet
+    int queries_per_tasklet = QUERY_NUM / NR_TASKLETS;
+    uint32_t remaining = QUERY_NUM % NR_TASKLETS;
+
+    int start_q = tasklet_id * queries_per_tasklet + (tasklet_id < remaining ? tasklet_id : remaining);
+    int end_q = start_q + queries_per_tasklet + (tasklet_id < remaining ? 1 : 0);
+
+    int total_children = DPU_TREE[0].count;
+    uint32_t local_found_count = 0;
+    // int result_index=0;
+
+    for (int q = start_q; q < end_q; q++)
+    {
+        Rect query = DPU_QUERY_RECT[q];
+        bool found = search_rtree_dpu(0, query, 0, total_children, q);
+        if (found)
+            local_found_count++;
+    }
+
+    // Save per-tasklet count
+    local_found_count_array[tasklet_id] = local_found_count;
+
+    // Wait for all tasklets
+    barrier_wait(&my_barrier);
+
+    // Perform parallel inclusive prefix sum across tasklets
+    for (uint32_t offset = 1; offset < NR_TASKLETS; offset <<= 1)
+    {
+        barrier_wait(&my_barrier);
+        uint32_t temp = 0;
+        if (tasklet_id >= offset)
+            temp = local_found_count_array[tasklet_id - offset];
+        barrier_wait(&my_barrier);
+        if (tasklet_id >= offset)
+            local_found_count_array[tasklet_id] += temp;
+    }
+
+    // Write total overlap count (last tasklet has the full sum)
+    barrier_wait(&my_barrier);
+    if (tasklet_id == NR_TASKLETS - 1)
+    {
+        DPU_OVERLAP_COUNT = local_found_count_array[tasklet_id];
+        // printf("Total overlaps on DPU: %u\n", local_found_count_array[tasklet_id]);
+    }
+
+    return 0;
+}

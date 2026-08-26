@@ -1,0 +1,86 @@
+#include <defs.h>
+#include <mram.h>
+#include <perfcounter.h>
+#include <barrier.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "common.h"
+#include "../host/rtree.h"
+
+// MRAM Variables
+__mram_noinit uint64_t DPU_INDEX;
+__mram_noinit uint64_t QUERY_NUM;
+__mram_noinit Rect DPU_QUERY_RECT[MAX_QUERY];
+__mram_noinit SerializedNode DPU_TREE[MAX_NODES];
+//__mram_noinit OverlapResult DPU_RESULT[MAX_QUERY];
+__mram_noinit uint64_t DPU_OVERLAP_COUNT[MAX_QUERY];
+
+// New WRAM buffer to write compact results
+//__dma_aligned OverlapResult compact_results[MAX_QUERY]; // This will store only "found == 1" results
+
+
+// Rectangle overlap check
+bool isRectOverlap(Rect r1, Rect r2)
+{
+    return !(r1.xmax < r2.xmin || r1.xmin > r2.xmax ||
+             r1.ymax < r2.ymin || r1.ymin > r2.ymax);
+}
+
+// Return number of overlapping rects under node_index
+static uint32_t search_rtree_dpu_count(int node_index, Rect query_rect, int start_child, int end_child)
+{
+    // Node-level MBR check
+    Rect m = {DPU_TREE[node_index].mbr.xmin, DPU_TREE[node_index].mbr.ymin,
+              DPU_TREE[node_index].mbr.xmax, DPU_TREE[node_index].mbr.ymax};
+    if (!isRectOverlap(m, query_rect))
+        return 0;
+
+    if (DPU_TREE[node_index].isLeaf)
+    {
+        uint32_t c = 0;
+        // Count ALL overlapping rects in this leaf
+        // (Unroll safely if you want, but do NOT early-return)
+        for (int i = 0; i < DPU_TREE[node_index].count; i++)
+        {
+            if (isRectOverlap(DPU_TREE[node_index].rects[i], query_rect))
+                c++;
+        }
+        return c;
+    }
+    else
+    {
+        // Recurse into all children (that exist)
+        uint32_t sum = 0;
+        for (int i = start_child; i < end_child && i < DPU_TREE[node_index].count; i++)
+        {
+            int child_index = DPU_TREE[node_index].children[i];
+            int child_count = DPU_TREE[child_index].count; // used as end bound
+            sum += search_rtree_dpu_count(child_index, query_rect, 0, child_count);
+        }
+        return sum;
+    }
+}
+
+int main()
+{
+    uint32_t tasklet_id = me();
+
+    // Determine query range for this tasklet
+    int queries_per_tasklet = QUERY_NUM / NR_TASKLETS;
+    uint32_t remaining = QUERY_NUM % NR_TASKLETS;
+
+    int start_q = tasklet_id * queries_per_tasklet + (tasklet_id < remaining ? tasklet_id : remaining);
+    int end_q = start_q + queries_per_tasklet + (tasklet_id < remaining ? 1 : 0);
+
+    int total_children = DPU_TREE[0].count;
+
+    for (int q = start_q; q < end_q; q++)
+    {
+        Rect query = DPU_QUERY_RECT[q];
+        uint64_t hits = search_rtree_dpu_count(0, query, 0, total_children);
+        DPU_OVERLAP_COUNT[q]= hits; // add number of rectangles, not just 0/1
+    }
+
+
+}

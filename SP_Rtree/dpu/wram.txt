@@ -1,0 +1,176 @@
+// dpu/rtree_query.c — optimized, per-query results, chunked round-robin, MRAM-safe
+#include <stdbool.h>
+#include <defs.h>
+#include <mram.h>
+#include <barrier.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "common.h"
+#include "../host/rtree.h"   // Rect, MBR, SerializedNode, MAX_QUERY, MAX_NODES, etc.
+
+STDOUT_BUFFER_INIT(131072);   // optional debug prints
+
+/* ---------------- Tunables ---------------- */
+#ifndef Q_CHUNK
+#define Q_CHUNK      16       // queries per tasklet chunk (try 8/16/32)
+#endif
+#ifndef CHILD_BUF
+#define CHILD_BUF    128      // child indices read block
+#endif
+#ifndef RECT_BUF
+#define RECT_BUF     64       // leaf rects read block
+#endif
+#ifndef STACK_MAX
+#define STACK_MAX    256      // iterative DFS stack depth (3-level trees -> plenty)
+#endif
+
+/* ---------------- MRAM symbols (must match host) ---------------- */
+__mram_noinit uint64_t       DPU_INDEX;
+__mram_noinit uint64_t       QUERY_NUM;
+__mram_noinit Rect           DPU_QUERY_RECT[MAX_QUERY];
+__mram_noinit SerializedNode DPU_TREE[MAX_NODES];
+__mram_noinit uint64_t       DPU_OVERLAP_COUNT[MAX_QUERY];   // per-query result
+
+/* ---------------- WRAM scratch ---------------- */
+BARRIER_INIT(g_bar, NR_TASKLETS);
+
+typedef struct {
+    int isLeaf;
+    int count;
+    MBR mbr;
+} NodeHeader;
+
+typedef struct { int idx, c_begin, c_end; } Frame;
+
+/* WRAM buffers for staged MRAM reads */
+__dma_aligned static NodeHeader hdr;
+__dma_aligned static int  child_buf[CHILD_BUF];
+__dma_aligned static Rect rect_buf[RECT_BUF];
+
+/* Fast overlap helpers */
+static inline bool mbr_overlap_wram(const MBR *m, const Rect *q) {
+    return !(m->xmax < q->xmin || m->xmin > q->xmax ||
+             m->ymax < q->ymin || m->ymin > q->ymax);
+}
+
+/* Iterative DFS with header-first MRAM reads; only pull children[] or rects[] as needed */
+static inline uint64_t search_iter(const Rect *query) {
+    uint64_t sum = 0;
+    Frame stack[STACK_MAX];
+    int sp = 0;
+
+    // seed with root; children bounds filled after header read
+    stack[sp++] = (Frame){ .idx = 0, .c_begin = 0, .c_end = 0 };
+
+    while (sp) {
+        Frame f = stack[--sp];
+
+        // Read just the node header (isLeaf, count, mbr)
+        mram_read(&DPU_TREE[f.idx], &hdr, sizeof(NodeHeader));
+        if (!mbr_overlap_wram(&hdr.mbr, query))
+            continue;
+
+        if (hdr.isLeaf) {
+            // scan leaf rects in MRAM blocks
+            int total = hdr.count;
+            for (int off = 0; off < total; ) {
+                int blk = total - off; if (blk > RECT_BUF) blk = RECT_BUF;
+                mram_read(&DPU_TREE[f.idx].rects[off], rect_buf, blk * sizeof(Rect));
+                for (int i = 0; i < blk; ++i) {
+                    const Rect *r = &rect_buf[i];
+                    if (!(r->xmax < query->xmin || r->xmin > query->xmax ||
+                          r->ymax < query->ymin || r->ymin > query->ymax))
+                        sum++;
+                }
+                off += blk;
+            }
+            continue;
+        }
+
+        // internal: read children indices in blocks and push them
+        int c_begin = 0;
+        int c_end   = hdr.count;
+
+        for (int off = c_begin; off < c_end; ) {
+            int blk = c_end - off; if (blk > CHILD_BUF) blk = CHILD_BUF;
+            mram_read(&DPU_TREE[f.idx].children[off], child_buf, blk * sizeof(int));
+
+            for (int i = 0; i < blk; ++i) {
+                int cidx = child_buf[i];
+                if ((unsigned)cidx >= MAX_NODES) continue; // guard
+                if (sp < STACK_MAX) {
+                    stack[sp++] = (Frame){ .idx = cidx, .c_begin = 0, .c_end = 0 };
+                } else {
+                    // extremely unlikely with 3 levels; process inline if stack full
+                    NodeHeader ch;
+                    mram_read(&DPU_TREE[cidx], &ch, sizeof(NodeHeader));
+                    if (!mbr_overlap_wram(&ch.mbr, query)) continue;
+                    if (ch.isLeaf) {
+                        int tot = ch.count;
+                        for (int ro = 0; ro < tot; ) {
+                            int rblk = tot - ro; if (rblk > RECT_BUF) rblk = RECT_BUF;
+                            mram_read(&DPU_TREE[cidx].rects[ro], rect_buf, rblk * sizeof(Rect));
+                            for (int j = 0; j < rblk; ++j) {
+                                const Rect *r = &rect_buf[j];
+                                if (!(r->xmax < query->xmin || r->xmin > query->xmax ||
+                                      r->ymax < query->ymin || r->ymin > query->ymax))
+                                    sum++;
+                            }
+                            ro += rblk;
+                        }
+                    } else {
+                        int cc = ch.count;
+                        for (int co = 0; co < cc; ) {
+                            int cblk = cc - co; if (cblk > CHILD_BUF) cblk = CHILD_BUF;
+                            mram_read(&DPU_TREE[cidx].children[co], child_buf, cblk * sizeof(int));
+                            for (int j = 0; j < cblk; ++j) {
+                                int gc = child_buf[j];
+                                if ((unsigned)gc < MAX_NODES && sp < STACK_MAX)
+                                    stack[sp++] = (Frame){ .idx = gc, .c_begin = 0, .c_end = 0 };
+                            }
+                            co += cblk;
+                        }
+                    }
+                }
+            }
+            off += blk;
+        }
+    }
+    return sum;
+}
+
+int main(void) {
+    const uint32_t tid = me();
+
+    // ---- Guard QUERY_NUM from host vs MAX_QUERY on DPU ----
+    uint32_t Q = (uint32_t)QUERY_NUM;
+    if (Q > MAX_QUERY) {
+        if (tid == 0) {
+            printf("ERR: QUERY_NUM=%u > MAX_QUERY=%u. Capping to avoid OOB.\n", Q, (unsigned)MAX_QUERY);
+        }
+        Q = MAX_QUERY; // cap defensively; host should also enforce this
+    }
+    if (MAX_NODES == 0) {
+        if (tid == 0) printf("ERR: MAX_NODES is 0.\n");
+        return 1;
+    }
+
+    // ---- Chunked round-robin partitioning across tasklets ----
+    for (uint32_t q0 = tid * Q_CHUNK; q0 < Q; q0 += (uint32_t)NR_TASKLETS * Q_CHUNK) {
+        uint32_t q1 = q0 + Q_CHUNK; if (q1 > Q) q1 = Q;
+
+        // Batch this small chunk of queries to WRAM
+        __dma_aligned Rect qbuf[Q_CHUNK];
+        mram_read(&DPU_QUERY_RECT[q0], qbuf, (q1 - q0) * sizeof(Rect));
+
+        for (uint32_t q = q0; q < q1; ++q) {
+            const Rect *qr = &qbuf[q - q0];
+            uint64_t hits = search_iter(qr);
+            DPU_OVERLAP_COUNT[q] = hits;   // per-query result (matches host expectations)
+        }
+    }
+
+    barrier_wait(&g_bar); // optional sync
+    return 0;
+}
