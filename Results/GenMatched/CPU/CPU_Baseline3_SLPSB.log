@@ -1,0 +1,287 @@
+
+===== Sports: query option 3 (10pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+
+R-tree construction time = 0.26 s
+
+=== R-Tree Stats ===
+Total Nodes       : 7837
+Subtree Nodes     : 5
+Leaf Nodes        : 7832
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Sports:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 99972 query rects. Query data size: 1.53 MB
+
+[Sequential] Overlaps = 183204, Time = 2.22 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 183204, Time = 0.17 s, Speedup = 13.07x
+[Parallel 2/2] Threads = 32, Overlaps = 183204, Time = 0.12 s, Speedup = 17.89x
+Result check: all parallel runs matched the sequential results.
+
+===== Sports: query option 4 (25pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+
+R-tree construction time = 0.26 s
+
+=== R-Tree Stats ===
+Total Nodes       : 7837
+Subtree Nodes     : 5
+Leaf Nodes        : 7832
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Sports:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 249928 query rects. Query data size: 3.81 MB
+
+[Sequential] Overlaps = 457537, Time = 5.59 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 457537, Time = 0.40 s, Speedup = 13.98x
+[Parallel 2/2] Threads = 32, Overlaps = 457537, Time = 0.31 s, Speedup = 17.77x
+Result check: all parallel runs matched the sequential results.
+
+===== Lakes: query option 3 (10pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+
+R-tree construction time = 2.10 s
+
+=== R-Tree Stats ===
+Total Nodes       : 65823
+Subtree Nodes     : 31
+Leaf Nodes        : 65792
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Lakes:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 841932 query rects. Query data size: 12.85 MB
+
+[Sequential] Overlaps = 3294008, Time = 83.86 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 3294008, Time = 5.61 s, Speedup = 14.95x
+[Parallel 2/2] Threads = 32, Overlaps = 3294008, Time = 4.71 s, Speedup = 17.80x
+Result check: all parallel runs matched the sequential results.
+
+===== Lakes: query option 4 (25pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+
+R-tree construction time = 2.09 s
+
+=== R-Tree Stats ===
+Total Nodes       : 65823
+Subtree Nodes     : 31
+Leaf Nodes        : 65792
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Lakes:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 2104829 query rects. Query data size: 32.12 MB
+
+[Sequential] Overlaps = 8120012, Time = 202.71 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 8120012, Time = 14.19 s, Speedup = 14.28x
+[Parallel 2/2] Threads = 32, Overlaps = 8120012, Time = 11.82 s, Speedup = 17.16x
+Result check: all parallel runs matched the sequential results.
+
+===== Parks: query option 3 (10pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 9961540 rects successfully.
+Total dataset size: 152.00 MB
+
+R-tree construction time = 2.48 s
+
+=== R-Tree Stats ===
+Total Nodes       : 77877
+Subtree Nodes     : 37
+Leaf Nodes        : 77840
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Parks:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 996154 query rects. Query data size: 15.20 MB
+
+[Sequential] Overlaps = 5157218, Time = 21.57 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 5157218, Time = 1.49 s, Speedup = 14.48x
+[Parallel 2/2] Threads = 32, Overlaps = 5157218, Time = 1.27 s, Speedup = 17.03x
+Result check: all parallel runs matched the sequential results.
+
+===== Parks: query option 4 (25pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 9961540 rects successfully.
+Total dataset size: 152.00 MB
+
+R-tree construction time = 2.50 s
+
+=== R-Tree Stats ===
+Total Nodes       : 77877
+Subtree Nodes     : 37
+Leaf Nodes        : 77840
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Parks:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 2490385 query rects. Query data size: 38.00 MB
+
+[Sequential] Overlaps = 13056323, Time = 53.99 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 13056323, Time = 3.90 s, Speedup = 13.85x
+[Parallel 2/2] Threads = 32, Overlaps = 13056323, Time = 3.19 s, Speedup = 16.92x
+Result check: all parallel runs matched the sequential results.
+
+===== Synthetic: query option 3 (10pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 16000000 rects successfully.
+Total dataset size: 244.14 MB
+
+R-tree construction time = 5.16 s
+
+=== R-Tree Stats ===
+Total Nodes       : 125372
+Subtree Nodes     : 57
+Leaf Nodes        : 125315
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Synthetic:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 1597493 query rects. Query data size: 24.38 MB
+
+[Sequential] Overlaps = 10104621133, Time = 147.04 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 10104621133, Time = 9.68 s, Speedup = 15.19x
+[Parallel 2/2] Threads = 32, Overlaps = 10104621133, Time = 7.83 s, Speedup = 18.78x
+Result check: all parallel runs matched the sequential results.
+
+===== Synthetic: query option 4 (25pct) =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 16000000 rects successfully.
+Total dataset size: 244.14 MB
+
+R-tree construction time = 5.16 s
+
+=== R-Tree Stats ===
+Total Nodes       : 125372
+Subtree Nodes     : 57
+Leaf Nodes        : 125315
+Number of Levels  : 3
+====================
+
+Choose the Query Dataset for Synthetic:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Read 3998921 query rects. Query data size: 61.02 MB
+
+[Sequential] Overlaps = 25291343715, Time = 367.56 s
+
+Parallel search timings:
+[Parallel 1/2] Threads = 18, Overlaps = 25291343715, Time = 24.53 s, Speedup = 14.99x
+[Parallel 2/2] Threads = 32, Overlaps = 25291343715, Time = 19.58 s, Speedup = 18.77x
+Result check: all parallel runs matched the sequential results.
+
+
+===== Dataset 5, query option 3 =====Which dataset do you want to work with? Choose option:1. Sports2. Lakes3. Parks4. Synthetic5. BuildingsEnter your option: Read 57392373 rects successfully.Total dataset size: 875.74 MBR-tree construction time = 15.16 s=== R-Tree Stats ===Total Nodes : 449079Subtree Nodes : 183Leaf Nodes : 448896
+Number of Levels : 3====================Choose the Query Dataset for Buildings:1. 1%2. 5%3. 10%4. 25%Enter your option (1-4): Read 1434809 query rects. Query data size: 21.89 MB[Sequential] Overlaps = 1425719, Time = 35.13 sParallel search timings:[Parallel 1/2] Threads = 18, Overlaps = 1425719, Time = 2.10 s, Speedup = 16.73x[Parallel 2/2] Threads = 32, Overlaps = 1425719, Time = 1.79 s, Speedup = 19.64xResult check: all parallel runs matched the sequential results.
+
+===== Dataset 5, query option 4 =====Which dataset do you want to work with? Choose option:1. Sports2. Lakes3. Parks4. Synthetic5. Buildings
+Enter your option: Read 57392373 rects successfully.Total dataset size: 875.74 MBR-tree construction time = 15.01 s=== R-Tree Stats ===Total Nodes : 449079Subtree Nodes : 183Leaf Nodes : 448896Number of Levels : 3====================Choose the Query Dataset for Buildings:1. 1%2. 5%3. 10%4. 25%Enter your option (1-4): Read 3587023 query rects. Query data size: 54.73 MB[Sequential] Overlaps = 3563438, Time = 87.49 sParallel search timings:[Parallel 1/2] Threads = 18, Overlaps = 3563438, Time = 5.44 s, Speedup = 16.08x[Parallel 2/2] Threads = 32, Overlaps = 3563438, Time = 4.44 s, Speedup = 19.69xResult check: all parallel runs matched the sequential results.

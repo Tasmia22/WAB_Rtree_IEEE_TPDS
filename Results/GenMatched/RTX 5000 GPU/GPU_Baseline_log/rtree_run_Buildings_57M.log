@@ -1,0 +1,52 @@
+
+===== Run started at 2026-09-15 16:53:42 =====
+Dataset: Buildings_57M
+Run timestamp: 2026-09-15 16:53:42
+Read 57392373 rects successfully.
+Total dataset size: 875.74 MB
+Data load time: 15.846 s
+CPU R-tree build: 14.961 s
+
+=== R-Tree Stats ===
+Loaded 1434809 query rects. Query load time: 0.415 s
+
+CPU total overlaps: 1425719  (time: 12.434 s)
+T_tree,H2D (flattened index distribution): 0.133282 s
+T_query,H2D: 0.003328 s
+T_init (result-buffer allocation + clear): 0.000178 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.456 s
+T_result,D2H: 0.001119 s
+T_host,result (aggregate per-query counts): 0.000694 s
+T_GPU,total: 0.594955 s
+
+
+MATCHED!!!CPU=1425719 GPU=1425719
+
+GPU is 27.247 times faster
+
+
+===== Run started at 2026-09-15 16:54:27 =====
+Dataset: Buildings_57M
+Run timestamp: 2026-09-15 16:54:27
+Read 57392373 rects successfully.
+Total dataset size: 875.74 MB
+Data load time: 15.892 s
+CPU R-tree build: 14.928 s
+
+=== R-Tree Stats ===
+Loaded 3587023 query rects. Query load time: 1.038 s
+
+CPU total overlaps: 3563438  (time: 31.060 s)
+T_tree,H2D (flattened index distribution): 0.133104 s
+T_query,H2D: 0.008142 s
+T_init (result-buffer allocation + clear): 0.000217 s
+T_GPU,kernel (launch + GPU search + synchronization): 1.100 s
+T_result,D2H: 0.002133 s
+T_host,result (aggregate per-query counts): 0.001751 s
+T_GPU,total: 1.245493 s
+
+
+MATCHED!!!CPU=3563438 GPU=3563438
+
+GPU is 28.233 times faster
+

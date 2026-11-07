@@ -1,0 +1,52 @@
+
+===== Run started at 2026-09-15 16:31:49 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-15 16:31:49
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.729 s
+CPU R-tree build: 2.058 s
+
+=== R-Tree Stats ===
+Loaded 841932 query rects. Query load time: 0.279 s
+
+CPU total overlaps: 3294008  (time: 56.381 s)
+T_tree,H2D (flattened index distribution): 0.020281 s
+T_query,H2D: 0.001973 s
+T_init (result-buffer allocation + clear): 0.000169 s
+T_GPU,kernel (launch + GPU search + synchronization): 1.998 s
+T_result,D2H: 0.000660 s
+T_host,result (aggregate per-query counts): 0.000412 s
+T_GPU,total: 2.021424 s
+
+
+MATCHED!!!CPU=3294008 GPU=3294008
+
+GPU is 28.220 times faster
+
+
+===== Run started at 2026-09-15 16:32:53 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-15 16:32:53
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.722 s
+CPU R-tree build: 2.073 s
+
+=== R-Tree Stats ===
+Loaded 2104829 query rects. Query load time: 0.696 s
+
+CPU total overlaps: 8120012  (time: 142.337 s)
+T_tree,H2D (flattened index distribution): 0.020257 s
+T_query,H2D: 0.004805 s
+T_init (result-buffer allocation + clear): 0.000169 s
+T_GPU,kernel (launch + GPU search + synchronization): 4.832 s
+T_result,D2H: 0.001409 s
+T_host,result (aggregate per-query counts): 0.000997 s
+T_GPU,total: 4.859680 s
+
+
+MATCHED!!!CPU=8120012 GPU=8120012
+
+GPU is 29.457 times faster
+

@@ -1,0 +1,156 @@
+
+===== Run started at 2026-09-16 17:13:59 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:13:59
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.730 s
+CPU R-tree build: 2.065 s
+
+=== R-Tree Stats ===
+Loaded 841932 query rects. Query load time: 0.279 s
+
+CPU total overlaps: 3294008  (time: 56.897 s)
+T_tree,H2D (flattened index distribution): 0.020164 s
+T_query,H2D: 0.001941 s
+T_init (result-buffer allocation + clear): 0.000167 s
+T_GPU,kernel (launch + GPU search + synchronization): 1.968 s
+T_result,D2H: 0.000734 s
+T_host,result (aggregate per-query counts): 0.000412 s
+T_GPU,total: 1.990920 s
+
+
+MATCHED!!!CPU=3294008 GPU=3294008
+
+GPU is 28.918 times faster
+
+
+===== Run started at 2026-09-16 17:15:04 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:15:04
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.705 s
+CPU R-tree build: 2.082 s
+
+=== R-Tree Stats ===
+Loaded 2104829 query rects. Query load time: 0.696 s
+
+CPU total overlaps: 8120012  (time: 142.867 s)
+T_tree,H2D (flattened index distribution): 0.020243 s
+T_query,H2D: 0.004780 s
+T_init (result-buffer allocation + clear): 0.000172 s
+T_GPU,kernel (launch + GPU search + synchronization): 4.829 s
+T_result,D2H: 0.001632 s
+T_host,result (aggregate per-query counts): 0.001056 s
+T_GPU,total: 4.856585 s
+
+
+MATCHED!!!CPU=8120012 GPU=8120012
+
+GPU is 29.587 times faster
+
+
+===== Run started at 2026-09-16 17:30:51 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:30:51
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.717 s
+CPU R-tree build: 2.058 s
+
+=== R-Tree Stats ===
+Loaded 841932 query rects. Query load time: 0.283 s
+
+CPU total overlaps: 3294008  (time: 56.790 s)
+T_tree,H2D (flattened index distribution): 0.019559 s
+T_query,H2D: 0.001914 s
+T_init (result-buffer allocation + clear): 0.000161 s
+T_GPU,kernel (launch + GPU search + synchronization): 1.966 s
+T_result,D2H: 0.000673 s
+T_host,result (aggregate per-query counts): 0.000399 s
+T_GPU,total: 1.989169 s
+
+
+MATCHED!!!CPU=3294008 GPU=3294008
+
+GPU is 28.879 times faster
+
+
+===== Run started at 2026-09-16 17:31:55 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:31:55
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.737 s
+CPU R-tree build: 2.067 s
+
+=== R-Tree Stats ===
+Loaded 2104829 query rects. Query load time: 0.697 s
+
+CPU total overlaps: 8120012  (time: 141.508 s)
+T_tree,H2D (flattened index distribution): 0.020271 s
+T_query,H2D: 0.004837 s
+T_init (result-buffer allocation + clear): 0.000174 s
+T_GPU,kernel (launch + GPU search + synchronization): 4.821 s
+T_result,D2H: 0.001378 s
+T_host,result (aggregate per-query counts): 0.001004 s
+T_GPU,total: 4.848233 s
+
+
+MATCHED!!!CPU=8120012 GPU=8120012
+
+GPU is 29.355 times faster
+
+
+===== Run started at 2026-09-16 17:49:22 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:49:22
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.749 s
+CPU R-tree build: 2.093 s
+
+=== R-Tree Stats ===
+Loaded 841932 query rects. Query load time: 0.280 s
+
+CPU total overlaps: 3294008  (time: 57.108 s)
+T_tree,H2D (flattened index distribution): 0.020280 s
+T_query,H2D: 0.001969 s
+T_init (result-buffer allocation + clear): 0.000166 s
+T_GPU,kernel (launch + GPU search + synchronization): 1.972 s
+T_result,D2H: 0.000727 s
+T_host,result (aggregate per-query counts): 0.000421 s
+T_GPU,total: 1.995698 s
+
+
+MATCHED!!!CPU=3294008 GPU=3294008
+
+GPU is 28.958 times faster
+
+
+===== Run started at 2026-09-16 17:50:27 =====
+Dataset: Lakes_8M
+Run timestamp: 2026-09-16 17:50:27
+Read 8419312 rects successfully.
+Total dataset size: 128.47 MB
+Data load time: 2.697 s
+CPU R-tree build: 2.072 s
+
+=== R-Tree Stats ===
+Loaded 2104829 query rects. Query load time: 0.721 s
+
+CPU total overlaps: 8120012  (time: 142.875 s)
+T_tree,H2D (flattened index distribution): 0.020345 s
+T_query,H2D: 0.004826 s
+T_init (result-buffer allocation + clear): 0.000172 s
+T_GPU,kernel (launch + GPU search + synchronization): 4.820 s
+T_result,D2H: 0.001427 s
+T_host,result (aggregate per-query counts): 0.000991 s
+T_GPU,total: 4.847652 s
+
+
+MATCHED!!!CPU=8120012 GPU=8120012
+
+GPU is 29.643 times faster
+

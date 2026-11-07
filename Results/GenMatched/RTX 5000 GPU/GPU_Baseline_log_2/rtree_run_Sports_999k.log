@@ -1,0 +1,156 @@
+
+===== Run started at 2026-09-16 17:13:50 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:13:50
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.355 s
+CPU R-tree build: 0.256 s
+
+=== R-Tree Stats ===
+Loaded 99972 query rects. Query load time: 0.035 s
+
+CPU total overlaps: 183204  (time: 1.870 s)
+T_tree,H2D (flattened index distribution): 0.002953 s
+T_query,H2D: 0.000212 s
+T_init (result-buffer allocation + clear): 0.000139 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.055 s
+T_result,D2H: 0.000133 s
+T_host,result (aggregate per-query counts): 0.000048 s
+T_GPU,total: 0.058351 s
+
+
+MATCHED!!!CPU=183204 GPU=183204
+
+GPU is 34.087 times faster
+
+
+===== Run started at 2026-09-16 17:13:53 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:13:53
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.331 s
+CPU R-tree build: 0.256 s
+
+=== R-Tree Stats ===
+Loaded 249928 query rects. Query load time: 0.082 s
+
+CPU total overlaps: 457537  (time: 4.684 s)
+T_tree,H2D (flattened index distribution): 0.003021 s
+T_query,H2D: 0.000623 s
+T_init (result-buffer allocation + clear): 0.000158 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.125 s
+T_result,D2H: 0.000290 s
+T_host,result (aggregate per-query counts): 0.000123 s
+T_GPU,total: 0.128758 s
+
+
+MATCHED!!!CPU=457537 GPU=457537
+
+GPU is 37.608 times faster
+
+
+===== Run started at 2026-09-16 17:30:41 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:30:41
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.361 s
+CPU R-tree build: 0.257 s
+
+=== R-Tree Stats ===
+Loaded 99972 query rects. Query load time: 0.033 s
+
+CPU total overlaps: 183204  (time: 1.888 s)
+T_tree,H2D (flattened index distribution): 0.003034 s
+T_query,H2D: 0.000234 s
+T_init (result-buffer allocation + clear): 0.000153 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.055 s
+T_result,D2H: 0.000122 s
+T_host,result (aggregate per-query counts): 0.000046 s
+T_GPU,total: 0.059025 s
+
+
+MATCHED!!!CPU=183204 GPU=183204
+
+GPU is 34.053 times faster
+
+
+===== Run started at 2026-09-16 17:30:44 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:30:44
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.365 s
+CPU R-tree build: 0.255 s
+
+=== R-Tree Stats ===
+Loaded 249928 query rects. Query load time: 0.083 s
+
+CPU total overlaps: 457537  (time: 4.637 s)
+T_tree,H2D (flattened index distribution): 0.003049 s
+T_query,H2D: 0.000647 s
+T_init (result-buffer allocation + clear): 0.000151 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.126 s
+T_result,D2H: 0.000286 s
+T_host,result (aggregate per-query counts): 0.000123 s
+T_GPU,total: 0.129882 s
+
+
+MATCHED!!!CPU=457537 GPU=457537
+
+GPU is 36.908 times faster
+
+
+===== Run started at 2026-09-16 17:49:12 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:49:12
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.358 s
+CPU R-tree build: 0.256 s
+
+=== R-Tree Stats ===
+Loaded 99972 query rects. Query load time: 0.033 s
+
+CPU total overlaps: 183204  (time: 1.874 s)
+T_tree,H2D (flattened index distribution): 0.003006 s
+T_query,H2D: 0.000219 s
+T_init (result-buffer allocation + clear): 0.000162 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.056 s
+T_result,D2H: 0.000130 s
+T_host,result (aggregate per-query counts): 0.000047 s
+T_GPU,total: 0.059802 s
+
+
+MATCHED!!!CPU=183204 GPU=183204
+
+GPU is 33.329 times faster
+
+
+===== Run started at 2026-09-16 17:49:15 =====
+Dataset: Sports_999k
+Run timestamp: 2026-09-16 17:49:15
+Read 999709 rects successfully.
+Total dataset size: 15.25 MB
+Data load time: 0.344 s
+CPU R-tree build: 0.256 s
+
+=== R-Tree Stats ===
+Loaded 249928 query rects. Query load time: 0.083 s
+
+CPU total overlaps: 457537  (time: 4.665 s)
+T_tree,H2D (flattened index distribution): 0.003075 s
+T_query,H2D: 0.000658 s
+T_init (result-buffer allocation + clear): 0.000161 s
+T_GPU,kernel (launch + GPU search + synchronization): 0.123 s
+T_result,D2H: 0.000300 s
+T_host,result (aggregate per-query counts): 0.000124 s
+T_GPU,total: 0.127414 s
+
+
+MATCHED!!!CPU=457537 GPU=457537
+
+GPU is 37.894 times faster
+

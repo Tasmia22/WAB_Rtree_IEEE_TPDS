@@ -1,0 +1,116 @@
+
+===== Synthetic: query option 3 =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 16000000 rects successfully.
+Total dataset size: 244.14 MB
+Data load time: 4.904 s
+CPU R-tree build: 5.145 s
+
+=== R-Tree Stats ===
+Total Nodes       : 125372
+Subtree Nodes     : 57
+Leaf Nodes        : 125315
+Number of Levels  : 3
+====================
+Flatten done
+
+Choose the Query Dataset for Synthetic:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Loaded 1597493 query rects. Query load time: 0.476 s
+
+CPU total overlaps: 10104621133  (time: 142.153 s)
+CUDA Device Property:
+  Using GPU 0: Quadro RTX 5000, global mem 15.6 GB, SMs 48
+   maxThreadsPerBlock 1024
+   maxThreadsPerMultiProcessor 1024
+   maxBlocksPerMultiProcessor 16
+   maxGridSize 2147483647 65535 65535
+   maxThreadsDim 1024 1024 64
+  DBG node1: child_off=56 child_cnt=2540
+  DBG node1 first child id = 57
+  DBG leaf node 57: is_leaf=1 first_rect=0 rect_cnt=128 (rect_pool_len=16000000)
+  DBG DEV rect[first]: [550919 -94292 2132621 102798]
+  DBG CPU rect[first]: [550919 -94292 2132621 102798]
+T_tree,H2D (flattened index distribution): 0.037553 s
+T_query,H2D: 0.003640 s
+T_init (result-buffer allocation + clear): 0.000159 s
+T_GPU,kernel (launch + GPU search + synchronization): 8.609 s
+T_result,D2H: 0.001167 s
+T_host,result (aggregate per-query counts): 0.000759 s
+T_GPU,total: 8.652460 s
+
+
+MATCHED!!!CPU=10104621133 GPU=10104621133
+
+GPU is 16.512 times faster
+
+
+Log saved to: GPU_Baseline_log/16M/rtree_run_16M.log
+
+===== Synthetic: query option 4 =====
+
+Which dataset do you want to work with? Choose option:
+	1. Sports
+	2. Lakes
+	3. Parks
+	4. Synthetic
+	5. Buildings
+
+Enter your option: Read 16000000 rects successfully.
+Total dataset size: 244.14 MB
+Data load time: 4.838 s
+CPU R-tree build: 5.151 s
+
+=== R-Tree Stats ===
+Total Nodes       : 125372
+Subtree Nodes     : 57
+Leaf Nodes        : 125315
+Number of Levels  : 3
+====================
+Flatten done
+
+Choose the Query Dataset for Synthetic:
+	1. 1%
+	2. 5%
+	3. 10%
+	4. 25%
+Enter your option (1-4): Loaded 3998921 query rects. Query load time: 1.188 s
+
+CPU total overlaps: 25291343715  (time: 348.639 s)
+CUDA Device Property:
+  Using GPU 0: Quadro RTX 5000, global mem 15.6 GB, SMs 48
+   maxThreadsPerBlock 1024
+   maxThreadsPerMultiProcessor 1024
+   maxBlocksPerMultiProcessor 16
+   maxGridSize 2147483647 65535 65535
+   maxThreadsDim 1024 1024 64
+  DBG node1: child_off=56 child_cnt=2540
+  DBG node1 first child id = 57
+  DBG leaf node 57: is_leaf=1 first_rect=0 rect_cnt=128 (rect_pool_len=16000000)
+  DBG DEV rect[first]: [550919 -94292 2132621 102798]
+  DBG CPU rect[first]: [550919 -94292 2132621 102798]
+T_tree,H2D (flattened index distribution): 0.037235 s
+T_query,H2D: 0.008916 s
+T_init (result-buffer allocation + clear): 0.000191 s
+T_GPU,kernel (launch + GPU search + synchronization): 21.720 s
+T_result,D2H: 0.002309 s
+T_host,result (aggregate per-query counts): 0.001919 s
+T_GPU,total: 21.770214 s
+
+
+MATCHED!!!CPU=25291343715 GPU=25291343715
+
+GPU is 16.052 times faster
+
+
+Log saved to: GPU_Baseline_log/16M/rtree_run_16M.log
